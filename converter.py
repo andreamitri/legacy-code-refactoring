@@ -1,14 +1,10 @@
-# What is this "Converter" converting?!?
-class Converter:
-    def __init__(self, factor, offset):
-        self.factor = factor
-        self.offset = offset
+class FahrenheitToCelsiusConverter:
+    """Convert temperatures from Fahrenheit to Celsius."""
 
-    def convert(self, value):
-        return value * self.factor + self.offset
+    def convert(self, fahrenheit):
+        """Return the temperature in Celsius."""
+        return (fahrenheit - 32) * 5 / 9
 
 
-# Why such oddly specific numbers?!?
-# And why "5/9" twice?!?
-c = Converter(5/9, -32 * 5/9)
-print(c.convert(212))
+converter = FahrenheitToCelsiusConverter()
+print(converter.convert(212))
