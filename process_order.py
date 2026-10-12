@@ -1,28 +1,30 @@
-# A long method doing far too many things at once
-# What do we do if any one or more of these operations fail?
-# How do you even test this?!?
-def process_order(order, user, discount_code, db, notify):
+def calculate_total(items):
+    return sum(item.price * item.qty for item in items)
 
-    # Step 1: Calculate total
-    # Calculation logic mixed directly into the order processing
-    total = 0
-    for item in order.items:
-        total += item.price * item.qty
 
-    # Step 2: Apply discount
-    # Discount logic hardcoded with magic numbers
-    # What if we add other discounts? Do we keep stacking elifs forever?
+def apply_discount(total, discount_code):
     if discount_code == "VIP":
-        total = total * 0.8
+        return total * 0.8
     elif discount_code == "FREESHIP":
-        total = total - 50
+        return total - 50
+    return total
 
-    # Step 3: Persist order
-    # SQL in the middle of business logic
-    # Ask yourself: Should this method really know the exact database schema?
-    db.execute("INSERT INTO orders (user, total) VALUES (?, ?)", (user, total))
 
-    # Step 4: Notify user
-    # What happens if notification rules change, or we add like SMS or some other way to notify?
+def save_order(user, total):
+    print(f"Saving order for {user.email}: {total}")
+
+
+def notify_user(user, total):
+    print(f"Email sent to {user.email}: Total is {total}")
+
+
+def process_order(order, user, discount_code, notify=False):
+    total = calculate_total(order.items)
+    total = apply_discount(total, discount_code)
+
+    save_order(user, total)
+
     if notify:
-        print(f"Email sent to {user.email}: Your order total is {total}")
+        notify_user(user, total)
+
+    return total
